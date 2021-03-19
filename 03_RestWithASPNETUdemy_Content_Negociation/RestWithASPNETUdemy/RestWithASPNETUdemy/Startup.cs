@@ -1,12 +1,16 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Rewrite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 using RestWithASPNETUdemy.Business;
 using RestWithASPNETUdemy.Business.Implementation;
+using RestWithASPNETUdemy.Hypermedia.Enricher;
+using RestWithASPNETUdemy.Hypermedia.Filters;
 using RestWithASPNETUdemy.Model.Context;
 using RestWithASPNETUdemy.Repository;
 using RestWithASPNETUdemy.Repository.Generic;
@@ -56,7 +60,27 @@ namespace RestWithASPNETUdemy
             })
             .AddXmlSerializerFormatters();
 
+            var filterOptions = new HyperMediaFilterOptions();
+            filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
+
+            services.AddSingleton(filterOptions);
+
             services.AddApiVersioning();
+
+            services.AddSwaggerGen(c => {
+                c.SwaggerDoc("v1",
+                    new OpenApiInfo
+                    {
+                        Title = "REST API do 0 à Azure com ASP.NET Core 5 e Docker",
+                        Version = "v1",
+                        Description = "API RESTful desenvolvida no curso 'REST API do 0 à Azure com ASP.NET Core 5 e Docker'",
+                        Contact = new OpenApiContact 
+                        {
+                            Name = "Leonardo Domingos",
+                            Url = new Uri("https://github.com/hellacopters")
+                        }
+                    });
+            });
 
             // Injeção de Dependencia
             services.AddScoped<IPersonBusiness, PersonBusinessImplementation>();
@@ -77,11 +101,23 @@ namespace RestWithASPNETUdemy
 
             app.UseRouting();
 
+            app.UseSwagger();
+            
+            app.UseSwaggerUI(c => {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json",
+                    "REST API do 0 à Azure com ASP.NET Core 5 e Docker - v1");
+            });
+
+            var option = new RewriteOptions();
+            option.AddRedirect("^$", "swagger");
+            app.UseRewriter(option);
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapControllerRoute("Defaultapi", "{controller=values}/{id?}");
             });
         }
 
