@@ -4,11 +4,13 @@ using RestWithASPNETUdemy.Model;
 using RestWithASPNETUdemy.Business;
 using RestWithASPNETUdemy.Data.VO;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 
 namespace RestWithASPNETUdemy.Business.Implementation
 {
     [ApiVersion("1")]
     [ApiController]
+    [Authorize("Bearer")]
     [Route("api/[controller]/v{version:apiVersion}")]
     public class BookController : ControllerBase
     {
