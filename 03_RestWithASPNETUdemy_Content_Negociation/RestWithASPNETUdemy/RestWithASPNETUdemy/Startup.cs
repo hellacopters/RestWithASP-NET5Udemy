@@ -122,9 +122,9 @@ namespace RestWithASPNETUdemy
                 c.SwaggerDoc("v1",
                     new OpenApiInfo
                     {
-                        Title = "REST API do 0 à Azure com ASP.NET Core 5 e Docker",
+                        Title = "REST API do 0 a Azure com ASP.NET Core 5 e Docker",
                         Version = "v1",
-                        Description = "API RESTful desenvolvida no curso 'REST API do 0 à Azure com ASP.NET Core 5 e Docker'",
+                        Description = "API RESTful desenvolvida no curso 'REST API do 0 a Azure com ASP.NET Core 5 e Docker'",
                         Contact = new OpenApiContact 
                         {
                             Name = "Leonardo Domingos",
@@ -133,7 +133,7 @@ namespace RestWithASPNETUdemy
                     });
             });
 
-            // Injeção de Dependencia
+            // InjeÃ§Ã£o de Dependencia
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
@@ -168,7 +168,7 @@ namespace RestWithASPNETUdemy
             
             app.UseSwaggerUI(c => {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json",
-                    "REST API do 0 à Azure com ASP.NET Core 5 e Docker - v1");
+                    "REST API do 0 Ã  Azure com ASP.NET Core 5 e Docker - v1");
             });
 
             var option = new RewriteOptions();
